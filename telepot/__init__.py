@@ -887,6 +887,23 @@ class Bot(_BotBase):
         p.update(_dismantle_message_identifier(msg_identifier))
         return self._api_request('editMessageText', _rectify(p))
 
+    def editMessageMedia(self, msg_identifier, media, reply_markup=None):
+        """
+        See: https://core.telegram.org/bots/api#editmessagemedia
+
+        :param msg_identifier: Same as ``msg_identifier`` in :meth:`telepot.Bot.editMessageText`
+
+        :type media: `InputMedia <https://core.telegram.org/bots/api#inputmedia>`_ objects
+        :param meida: Same as ``media`` in :meth:`telepot.Bot.sendMediaGroup`
+        """
+        p = _strip(locals(), more=['media', 'msg_identifier'])
+        p.update(_dismantle_message_identifier(msg_identifier))
+
+        legal_media, files_to_attach = _split_input_media_array([media])
+        p['media'] = legal_media[0]
+
+        return self._api_request('editMessageMedia', _rectify(p), files_to_attach)
+
     def editMessageCaption(self, msg_identifier,
                            caption=None,
                            parse_mode=None,
